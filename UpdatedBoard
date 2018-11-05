@@ -1,0 +1,143 @@
+package othello;
+
+import java.util.Arrays;
+import java.io.*;
+import java.util.*;
+
+public class Board {
+	public static void main(String[] args) {
+	int[][] board = new int[][] {
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+		{0, 0, 0, 1, 2, 0, 0, 0 },
+		{0, 0, 0, 2, 1, 0, 0, 0 },
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+		{0, 0, 0, 0, 0, 0, 0, 0 },
+	};
+	
+	//test
+	Player p = new Player("jon"); //added
+	Player p1 = new Player("bob");
+	p.setColor(1); //added
+	p1.setColor(2);
+	possibleMoves(board, p1);//added
+	//end test
+
+	 
+	}
+	public static void possibleMoves(int[][] b, Player p){
+		//changed index to match return type
+		
+		//get Player color 
+		int color = p.getColor();
+		int color1;
+		if(color ==1)
+			 color1 = 2;
+		else 
+			 color1 = 1;
+		
+		
+		int column=0;
+		int row =0;
+		
+		
+//changed if statements 
+		if(color ==1) {
+		 for(int i = 0; i < 8; i++) {
+			 for(int j = 0; j < 8; j++) {
+				
+				
+				 switch(b[i][j]) {
+				 
+				 case 0:
+					 break;
+				 case 1:
+					 
+				 if( (b[i][j] == color ) && (b[i+1][j] == color1) && (b[i+2][j] == 0)){ //Checks right
+					 column = i+2;
+					 row = j;
+					 b[column][row] = 3;	
+					 System.out.print("right ");
+					
+				 }
+				 if( (b[i][j] == color ) && (b[i-1][j] == color1) && (b[i-2][j] ==0) && i>=2){ //Checks left
+					 column = i-2;
+					 row =j;
+					 b[column][row] = 3;
+					System.out.print("left ");
+				 }
+				 if( (b[i][j] == color ) && (b[i][j+1] == color1) && (b[i][j+2] ==0)){ //Checks down
+					 column = i;
+					 row = j+2;
+					 b[column][row] = 3;
+					System.out.print("down ");
+				 }
+				 if( (b[i][j] == color ) && (b[i][j-1] == color1) && (b[i][j-2] ==0)&&j>=2){ //Checks upwards
+					 column = i;
+					 row = j-2;
+					 b[column][row] = 3;
+					System.out.print("up ");
+				}
+				 break;
+				 
+				 case 2: 
+					 break;
+				 }
+			 }
+				 
+				
+		 }
+				 
+	 }
+		if(color==2) {
+			for(int i = 0; i < 8; i++) {
+				 for(int j = 0; j < 8; j++) {
+					
+					 
+					 switch(b[i][j]) {
+					 
+					 case 0:
+						 break;
+					 case 1:
+						 break;
+					 
+					 case 2: 
+						 if( (b[i][j] == color ) && (b[i+1][j] == color1) && (b[i+2][j] == 0)){ //Checks right
+							 column = i+2;
+							 row = j;
+							 b[column][row] = 3;	
+							 System.out.print("right ");
+							
+						 }
+						 if( (b[i][j] == color ) && (b[i-1][j] == color1) && (b[i-2][j] ==0) && i>=2){ //Checks left
+							 column = i-2;
+							 row =j;
+							 b[column][row] = 3;
+							System.out.print("left ");
+						 }
+						 if( (b[i][j] == color ) && (b[i][j+1] == color1) && (b[i][j+2] ==0)){ //Checks down
+							 column = i;
+							 row = j+2;
+							 b[column][row] = 3;
+							System.out.print("down ");
+						 }
+						 if( (b[i][j] == color ) && (b[i][j-1] == color1) && (b[i][j-2] ==0)&&j>=2){ //Checks upwards
+							 column = i;
+							 row = j-2;
+							 b[column][row] = 3;
+							System.out.print("up ");
+						}
+						 break;
+					 }
+				 }
+					 
+					
+			 }
+		}
+		 System.out.print("done ");
+			 
+		 
+	}
+}
