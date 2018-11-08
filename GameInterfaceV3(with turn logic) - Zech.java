@@ -140,30 +140,29 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 		boolean isPossible1 = BoardV2.possibleMoves(logicMatrix, player1);
 		boolean isPossible2 = BoardV2.possibleMoves(logicMatrix, player2);
 		
-		int turn = 1, currentColor = 1; // Sets the turn to initial value of zero and currentColor to black to start the game
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				GameInterfaceV3 q = new GameInterfaceV3();
-				/*if(turn == 1)
-					continue; //If the turn is the starting turn, everything should be in order
-				else 		    //If the turn is anything else, then run through these steps
-				if(currentColor == 1)
-					currentColor++; //If the currentColor is black, make it white
-				else 	
-					currentColor--; //If the currentColor is white, make it black
-				if(currentColor == 1) //Assuming player1 is playing with the black pieces, 
-					if(isPossible1 = false) //if p1 has no possible moves, then change the currentColor to black
+		/*if(turn == 1)
+			continue; //If the turn is the starting turn, everything should be in order
+		else 		    //If the turn is anything else, then run through these steps
+			if(currentColor == 1)
+				currentColor++; //If the currentColor is black, make it white
+			else 	
+				currentColor--; //If the currentColor is white, make it black
+			if(currentColor == 1) //Assuming player1 is playing with the black pieces, 
+				if(isPossible1 = false) //if p1 has no possible moves, then change the currentColor to black
 						currentColor = 2;
 				else
 					if(isPossible2 = false) //if p2 has no possible moves, then change the currentColor to white
 						currentColor = 1;
 				//End game logic
-				if(isPossible1 = false && isPossible2 = false)
-					//End game
-				*/
-				
-				//Try to figure out how to implement 
-
+		if(isPossible1 = false && isPossible2 = false)
+			//End game
+		*/
+		//Try to figure out how to implement 
+		
+		int turn = 1, currentColor = 1; // Sets the turn to initial value of zero and currentColor to black to start the game
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GameInterfaceV3 q = new GameInterfaceV3();
 			}
 		});
 		System.out.println();
