@@ -156,7 +156,12 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 						currentColor = 2;
 				else
 					if(isPossible2 = false) //if p2 has no possible moves, then change the currentColor to white
-						currentColor = 1;*/
+						currentColor = 1;
+				//End game logic
+				if(isPossible1 = false && isPossible2 = false)
+					//End game
+				*/
+				
 				//Try to figure out how to implement 
 
 			}
