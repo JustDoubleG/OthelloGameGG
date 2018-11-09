@@ -1,5 +1,6 @@
 // Author: Sai Chand Reddy Bussu
 // Modified on 11/05/2018
+package Othello;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,36 +15,20 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
-public class GameInterfaceV3 extends JFrame implements ActionListener {
-	/**
-	 * 
-	 */
-
+public class GameInterfaceV4 extends JFrame implements ActionListener {
 	static Player player1 = new Player("Black");
 	static Player player2 = new Player("White");
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
-	private JButton[][] buttons;
+	private static JButton[][] buttons;
 	private SquareBox[][] board;
-	
-	static int[][]logicMatrix = new int[][] {
-		{0, 0, 0, 0, 0, 0, 0, 0 },
-		{0, 0, 0, 0, 0, 0, 0, 0 },
-		{0, 0, 0, 0, 0, 0, 0, 0 },
-		{0, 0, 0, 1, 2, 0, 0, 0 },
-		{0, 0, 0, 2, 1, 0, 0, 0 },
-		{0, 0, 0, 0, 0, 3, 0, 0 },
-		{0, 0, 0, 0, 0, 0, 0, 0 },
-		{0, 0, 0, 0, 0, 0, 0, 0 },
-	};
-
-	public GameInterfaceV3() {//Unknown
+	public GameInterfaceV4() {//Unknown
 		
 		initUI();
 		this.setVisible(true);
 	}
 
-	public GameInterfaceV3(SquareBox[][] board) {//unknown
+	public GameInterfaceV4(SquareBox[][] board) {//unknown
 		this.setBoard(board);
 		initUI();
 		this.setVisible(true);
@@ -55,7 +40,7 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 	public void initUI() {
 		panel = new JPanel();
 		
-		BoardV2 testBoard = new BoardV2();
+		BoardV4 testBoard = new BoardV4();
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 		panel.setBorder(new MatteBorder(15,15,15,15, Color.WHITE)); // boarder color
@@ -77,7 +62,7 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 							this.board[i][j].toString());
 					panel.add(this.buttons[i][j]);
 				} else {
-					this.buttons[i][j] = new JButton(".");
+					this.buttons[i][j] = new JButton(" ");
 					this.buttons[i][j].setIcon(new ImageIcon("images/icon.png"));
 					panel.add(this.buttons[i][j]);
 				}
@@ -88,29 +73,7 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 		}
 
 
-		add(panel);
-		
-		System.out.println(logicMatrix[4][4]);
-		
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if(logicMatrix[i][j] == 0) {
-					this.buttons[i][j].setIcon(new ImageIcon("images/icon.png"));
-				}
-				if(logicMatrix[i][j] == 1) {
-					this.buttons[i][j].setIcon(new ImageIcon("images/BlackCircle.png"));
-				}
-				if(logicMatrix[i][j] == 2) {
-					this.buttons[i][j].setIcon(new ImageIcon("images/WhiteCircle.png"));
-				}
-				if(logicMatrix[i][j] == 3) {
-					this.buttons[i][j].setIcon(new ImageIcon("images/yellow-circle-md.png"));
-				}
-			}
-		}
-
-		//possibleMoves(logicMatrix, player1);
-		
+		add(panel);	
 		setTitle("GG");
 		setSize(600, 600);
 		setLocationRelativeTo(null);
@@ -118,163 +81,23 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 
 	}
 
-	public void updateUI() {
+	public static void updateUI(int[][] logicMatrix) {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				if(logicMatrix[i][j] == 0) {
 					buttons[i][j].setIcon(new ImageIcon("images/icon.png"));
 				}
 				if(logicMatrix[i][j] == 1) {
-					buttons[i][j].setIcon(new ImageIcon("images/BlackCircle.png"));
+					buttons[i][j].setBackground(Color.black);
 				}
 				if(logicMatrix[i][j] == 2) {
-					buttons[i][j].setIcon(new ImageIcon("images/WhiteCircle.png"));
+					buttons[i][j].setBackground(Color.white);
 				}
 				if(logicMatrix[i][j] == 3) {
-					buttons[i][j].setIcon(new ImageIcon("images/YellowCircle1.png"));
+					buttons[i][j].setBackground(Color.yellow);
 				}
 			}
 		}
-	}
-	
-	public static boolean possibleMoves(int[][] b, Player p) {
-		//changed index to match return type
-		
-		//get Player color
-		int possibleMovesCounter=0;
-		boolean possibleMovesBool = false;
-		int color = p.getColor();
-		int color1;
-		if(color == 1)
-			 color1 = 2;
-		else 
-			 color1 = 1;		
-		
-		int column = 0;
-		int row = 0;
-			
-			
-		//changed if statements 
-		if(color == 1) {
-			for(int i = 0; i < 8; i++) {
-				for(int j = 0; j < 8; j++) {	
-				 
-				 switch(b[i][j]) {
-				 
-				 	case 0:
-						 break;
-						 
-					case 1:
-						if( (b[i][j] == color ) && (b[i+1][j] == color1) && (b[i+2][j] == 0)){ //Checks move down
-							row = j;
-							column = i + 2;
-							//Set new possible move down and changes value between
-							b[i+2][j] = 3;
-						
-							System.out.println("down ");
-						}
-						if( (b[i][j] == color ) && (b[i-1][j] == color1) && (b[i-2][j] == 0) && i >= 2){ //Checks move up
-							row = j;
-							column = i - 2;
-							//Set new possible move up and changes value between
-							b[i-2][j] = 3;
-							
-							System.out.println("up ");
-						}
-						if( (b[i][j] == color ) && (b[i][j+1] == color1) && (b[i][j+2] == 0)){ //Checks move right
-							row = j + 2;
-							column = i;
-							//Set new possible move right and changes value between
-							b[i][j+2] = 3;
-							
-							System.out.println("right ");
-						}
-						if( (b[i][j] == color ) && (b[i][j-1] == color1) && (b[i][j-2] == 0) && j >= 2){ //Checks move left
-							row = j - 2;
-							column = i;
-							//Set new possible move left and changes value between
-							b[i][j-2] = 3;
-							
-							System.out.println("left ");
-						}
-						
-						break;
-					 
-					case 2: 
-						break;
-				 }
-				}
-			}	 
-		}
-		
-		if(color == 2) {
-			for(int i = 0; i < 8; i++) {
-				for(int j = 0; j < 8; j++) {
-					
-						 switch(b[i][j]) {
-						 
-						 	case 0:
-						 		break;
-						 		
-						 	case 1:
-						 		break;
-						 
-						 	case 2: 
-						 		if( (b[i][j] == color ) && (b[i+1][j] == color1) && (b[i+2][j] == 0)){ //Checks move down
-						 			row = j;
-						 			column = i + 2;
-						 			//Set new possible move down and changes value between
-						 			b[i+2][j] = 3;
-						 			
-						 			System.out.println("down ");
-						 			possibleMovesCounter++;
-								
-						 		}
-						 		if( (b[i][j] == color ) && (b[i-1][j] == color1) && (b[i-2][j] == 0) && i >= 2){ //Checks move up
-						 			row = j;
-						 			column = i - 2;
-						 			//Set new possible move up and changes value between
-						 			b[i-2][j] = 3;
-						 			
-						 			System.out.println("up ");
-						 			possibleMovesCounter++;
-						 		}
-						 		if( (b[i][j] == color ) && (b[i][j+1] == color1) && (b[i][j+2] == 0)){ //Checks move right
-						 			row = j + 2;
-						 			column = i;
-						 			//Set new possible move right and changes value between
-						 			b[i][j+2] = 3;
-						 			
-						 			System.out.println("right ");
-						 			possibleMovesCounter++;
-						 		}
-						 		if( (b[i][j] == color ) && (b[i][j-1] == color1) && (b[i][j-2] == 0) && j >= 2){ //Checks move left
-						 			row = j - 2;
-						 			column = i;
-						 			//Set new possible move left and changes value between
-						 			b[i][j-2] = 3;
-						 			
-						 			System.out.println("left ");
-						 			possibleMovesCounter++;
-						 		}
-						 		if(possibleMovesCounter!=0) {
-						 			possibleMovesBool = true;
-						 		}
-						 		break;
-						 }
-				}
-			}
-		}
-		
-		//System.out.println("done "); 
-		for( row = 0; row < b.length; row++ ){
-		  for(column = 0; column < b[row].length; column++ ){
-		    System.out.print(Integer.toString(b[row][column])+"  ");
-		  }
-		  System.out.print("\n"); 
-		}
-		//This is where the print loop ends
-		return possibleMovesBool;
 	}
 	
 	
@@ -297,12 +120,12 @@ public class GameInterfaceV3 extends JFrame implements ActionListener {
 		
 		player1.setColor(1);
 		player2.setColor(2);
-		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				GameInterfaceV3 q = new GameInterfaceV3();
-				possibleMoves(logicMatrix, player1);
-				//updateUI();
+				GameInterfaceV4 q = new GameInterfaceV4();
+				BoardV4.main();
+				
+				
 			}
 		});
 		System.out.println();
