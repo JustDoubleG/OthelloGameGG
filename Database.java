@@ -1,6 +1,13 @@
+/*
+ * Database.Java
+ * Sola Adekunle
+ * November 28, 2018
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,15 +19,18 @@ public class Database {
 	public static void init () {
 		File pFile = new File(playerfile);
 		File aFile = new File(adminFile);
-		System.out.println("Created " + pFile + " " + aFile);
+		pFile.delete();
+		aFile.delete();
 	}
 	
-	public static void addPlayer(ZPlayer player) throws IOException {
-		File outputFile = new File(playerfile);
-		BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile, true));
-		bw.write(player.getUsername()); bw.newLine();
-		bw.write(player.getPassword()); bw.newLine();
-		bw.close(); 
+	public static void addPlayer(ZPlayer player) throws IOException { 
+		if (! Database.playerExists(player.getUsername())) {
+			File outputFile = new File(playerfile);
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile, true));
+			bw.write(player.getUsername()); bw.newLine();
+			bw.write(player.getPassword()); bw.newLine();
+			bw.close(); 
+		}
 	}
 
 	public static boolean validatePlayer(String username, String password) throws ClassNotFoundException, IOException {
@@ -29,7 +39,6 @@ public class Database {
 		BufferedReader bufferedReader = new BufferedReader(reader);
 		while (true) {
 			un = bufferedReader.readLine().trim();
-			System.out.println("Username is " + un);
 			if (un == null)
 				return false;
 			pw = bufferedReader.readLine().trim();
@@ -50,6 +59,25 @@ public class Database {
 		 return (username.equals(adminUsername) && password.equals(adminPassword));
 	}
 	
+	public static boolean playerExists (String username) throws IOException {
+		File file = new File(playerfile);
+		if (!file.exists()) 
+			return false;
+		
+		String un, pw = null;
+		FileReader reader = new FileReader(playerfile);
+		BufferedReader bufferedReader = new BufferedReader(reader);
+		while (true) {
+			un = bufferedReader.readLine();
+			if (un == null) 
+				return false;
+			pw = bufferedReader.readLine().trim();
+			if (username.equals(un)) {
+				return true;
+			}
+		}
+	}
+	
 	public static void main (String[] args) {
 		Database.init();
 		ZPlayer p = new ZPlayer("foo", "bar");
@@ -57,12 +85,13 @@ public class Database {
 		try {
 			Database.addPlayer(p);
 			Database.addPlayer(p2);
+			Database.addPlayer(p);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			System.out.println(Database.validatePlayer("test", "bar"));
+			System.out.println(Database.validatePlayer("test", "foo"));
 		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
