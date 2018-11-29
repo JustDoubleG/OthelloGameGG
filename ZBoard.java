@@ -1,137 +1,717 @@
-/*
- * Database.Java
- * Sola Adekunle
- * Database.java
- * November 28, 2018
- */
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-public class Database {
-	private static String playerfile = "players.txt";
-	private static String adminFile = "admins.txt";
-	private static String gamesFile = "games.txt";
+public class ZBoard{
+	private String gameNum;						//The name of the game, ex: Game1
+	public int[][] dB;							//The matrix that hold the values that determines the logic behind a game
+	public boolean pMove;						//Keeps track if a player has a possible move during a turn.
+	public int p1Turn = 1;				//Attempt to keep track of turns NEEDS A SOLUTION
+	public ZPlayer player1;	//An instance of player
+	public ZPlayer player2;	//An instance of player
+	private boolean victory;
 	
-	public static void init () {
-		File pFile = new File(playerfile);
-		File aFile = new File(adminFile);
-		File gFile = new File(gamesFile);
-		pFile.delete();
-		aFile.delete();
-		gFile.delete();
+	//Constructor for current version of board
+	public ZBoard() {
+		//Declare the variables used in an instance of the game
+		gameNum = "one";
+		pMove = false;
+		p1Turn = 1;
+		victory = false;
+		player1 = new ZPlayer();
+		player2 = new ZPlayer();
+		player1.setNumberValue(1);
+		player2.setNumberValue(2);
+		//player1.setMyTurn(true);
+		player1.setCompletionOfTurn(0);
+		player2.setCompletionOfTurn(1);
+		dB= new int[][] {
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+			{0, 0, 0, 1, 2, 0, 0, 0 },
+			{0, 0, 0, 2, 1, 0, 0, 0 },
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+			{0, 0, 0, 0, 0, 0, 0, 0 },
+		};
 	}
 	
-	public static void addPlayer(ZPlayer player) throws IOException { 
-		if (! Database.playerExists(player.getUsername())) {
-			File outputFile = new File(playerfile);
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile, true));
-			bw.write(player.getUsername()); bw.newLine();
-			bw.write(player.getPassword()); bw.newLine();
-			bw.close(); 
+	public void switchPlayerTurnIndicator() {
+		if(this.p1Turn == 1) {
+			p1Turn = 0;
+			player1.completionOfTurn = 1;
+			player2.completionOfTurn = 0;
+		}
+		else {
+			p1Turn = 1;
+			player1.completionOfTurn = 0;
+			player2.completionOfTurn = 1;
 		}
 	}
+	
+	public ZPlayer getPlayer1() {
+		return this.player1;
+	}
+	
+	public ZPlayer getPlayer2() {
+		return this.player2;
+	}
+	
+	public boolean getVictory() {
+		return this.victory;
+	}
+	//**************************************************************************************************//
+	
+		/*if(this.pMove == true){
+			if(this.p1Turn == true) {
+				this.p1Turn = false;
+				this.player1.hadPossibleMoves = true;//had possible move
+				}
+			else {
+				this.p1Turn = true;
+				this.player2.hadPossibleMoves = true;//has possible move
+				}
+		}
+		else { 
+			if(this.p1Turn == true) {
+				this.p1Turn = false;
+				this.player1.hadPossibleMoves = false;
+			}
+			if(this.p1Turn == false) {
+				this.p1Turn = true;
+				this.player2.hadPossibleMoves = false;
+			}
+		}*/
+	
+	
+	public boolean checkVictory() {
+		if(this.player1.hadPossibleMoves == false && this.player2.hadPossibleMoves == false) {
+			this.victory = true;
+		}
+		return this.victory;
+	}
+	
+	//**************************************************************************************************//
 
-	public static boolean validatePlayer(String username, String password) throws ClassNotFoundException, IOException {
-		String un, pw = null;
-		FileReader reader = new FileReader(playerfile);
-		BufferedReader bufferedReader = new BufferedReader(reader);
-		while (true) {
-			un = bufferedReader.readLine().trim();
-			if (un == null)
-				return false;
-			pw = bufferedReader.readLine().trim();
-			if (username.equals(un)) {
-				return password.equals(pw);
+	
+	//**************************************************************************************************//
+	public String getName() {//Return the variable gameNum 
+		return this.gameNum;
+	}
+	
+	
+	//**************************************************************************************************//
+	public int[][] getMatrix(){//Return the variable dB 
+		return this.dB;
+	}
+	
+	
+	//**************************************************************************************************//
+	public boolean getPossibleMovesBoolean() {//Return the variable pMove 
+		return this.pMove;
+	}
+	
+	
+	//**************************************************************************************************//
+	public void setPossibleMovesBoolean(Boolean b) {//Set the variable pMove
+		this.pMove = b;
+	}
+	
+	
+	//**************************************************************************************************//
+	public int getPlayerTurn() {//if p1Turn = true p1s move else p2s
+		return this.p1Turn;
+	}
+	
+	
+	//**************************************************************************************************//
+	public void setPlayerTurn(int b) {//Set value of p1Turn
+		this.p1Turn = b;
+	}
+	
+	
+	//**************************************************************************************************//
+	public int getValue(int row, int column) {//Get value of a cell from given row and column
+		int value = this.dB[row][column];
+		return value;
+	}
+	
+	
+	//**************************************************************************************************//
+	public void setValue(int row, int column, int v) {//Set value of a cell from given row and column
+		this.dB[row][column] = v;
+	}
+	
+	
+	//**************************************************************************************************//
+	
+	
+	
+	
+	//**************************************************************************************************//
+	/*                                         THREE's RESET                     	                    */
+	//**************************************************************************************************//
+	public void reset3s() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if(this.getValue(i, j) == 3){
+					this.setValue(i, j, 0);
+				}
 			}
 		}
 	}
 	
-	public static boolean validateAdmin (String username, String password) throws IOException {
-		 File file = new File(adminFile); 
-		 String adminUsername = null, adminPassword = null;
-		 BufferedReader br = new BufferedReader(new FileReader(file));
-		 
-		 username = br.readLine();
-		 password = br.readLine();
-		 
-		 return (username.equals(adminUsername) && password.equals(adminPassword));
+	
+	//**************************************************************************************************//
+	/*                                         PLAYER TURN                                              */
+	//**************************************************************************************************//
+	public ZPlayer playerTurn() {
+		if(this.p1Turn == 1) {
+			return player1;
+		}
+		else {
+			return player2;
+		}
 	}
 	
-	private static boolean playerExists (String username) throws IOException {
-		File file = new File(playerfile);
-		if (!file.exists()) 
-			return false;
+	public ZPlayer whoTurn() {
+		if(this.p1Turn == 1){
+			return player1;
+		}
+		else {
+			return player2;
+		}
+	}
+	
+	
+	//**************************************************************************************************//
+	/*                                         PRINT BOARD                                              */
+	//**************************************************************************************************//
+	public void PrintBoard() {
+		int counter = 0;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				System.out.print("  " + this.getValue(i,j) );
+				counter ++;
+				if(counter%8 == 0) {
+					System.out.println();
+				}
+			}
+		}
+	}
+	
+	public Boolean isValidPosition(int row, int column) {
+		return (row >= 0 && row <=7 && column >=0 && column<=7);
+	}
+	
+	//**************************************************************************************************//
+	/*                                         POSSIBLE MOVES                                           */
+	//**************************************************************************************************//
+	public void possibleMoves2() {
+		//get Player color
+		int num1 = this.playerTurn().getNumberValue();
+		int num2;
+		if(num1 == 1) {
+			num2 = 2;
+		}
+		else {
+			num2 = 1;
+		}
 		
-		String un, pw = null;
-		FileReader reader = new FileReader(playerfile);
-		BufferedReader bufferedReader = new BufferedReader(reader);
-		while (true) {
-			un = bufferedReader.readLine();
-			if (un == null) 
-				return false;
-			pw = bufferedReader.readLine().trim();
-			if (username.equals(un)) {
-				return true;
+		boolean pMoves = false;
+		int column = 0;
+		int row = 0;
+		
+		//Checks all directions
+		for(int r = 0; r < 8; r++) {
+			for(int c = 0; c < 8; c++) {
+				//Up
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c) && this.getValue(r - 1, c) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c) == 0) {
+						this.setValue(r - x, c, 3);
+					}
+				}
+				
+				//Down
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c) && this.getValue(r + 1, c) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c) == 0) {
+						this.setValue(r + x, c, 3);
+					}
+				}
+				
+				//Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r, c - 1) && this.getValue(r, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r, c - x) == 0) {
+						this.setValue(r, c - x, 3);
+					}
+				}
+				
+				//Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r, c + 1) && this.getValue(r, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r, c + x) == 0) {
+						this.setValue(r, c + x, 3);
+					}
+				}
+				
+				//Up - Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c - 1) && this.getValue(r - 1, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c - x) == 0) {
+						this.setValue(r - x, c - x, 3);
+					}
+				}
+				
+				//Up - Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c + 1) && this.getValue(r - 1, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c + x) == 0) {
+						this.setValue(r - x, c + x, 3);
+					}
+				}
+				
+				//Down - Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c - 1) && this.getValue(r + 1, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c - x) == 0) {
+						this.setValue(r + x, c - x, 3);
+					}
+				}
+				
+				//Down - Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c + 1) && this.getValue(r + 1, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c + x) == 0) {
+						this.setValue(r + x, c + x, 3);
+					}
+				}
+				
+			} //end second for loop
+		} //end first for loop
+	} //end possiblemoves2
+	
+	public void possibleMoves2(ZPlayer p) {
+		//get Player color
+		int num1 = p.getNumberValue();
+		int num2;
+		if(num1 == 1) {
+			num2 = 2;
+		}
+		else {
+			num2 = 1;
+		}
+		
+		boolean pMoves = false;
+		int column = 0;
+		int row = 0;
+		
+		//Checks all directions
+		for(int r = 0; r < 8; r++) {
+			for(int c = 0; c < 8; c++) {
+				//Up
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c) && this.getValue(r - 1, c) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c) == 0) {
+						this.setValue(r - x, c, 3);
+					}
+				}
+				
+				//Down
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c) && this.getValue(r + 1, c) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c) == 0) {
+						this.setValue(r + x, c, 3);
+					}
+				}
+				
+				//Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r, c - 1) && this.getValue(r, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r, c - x) == 0) {
+						this.setValue(r, c - x, 3);
+					}
+				}
+				
+				//Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r, c + 1) && this.getValue(r, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r, c + x) == 0) {
+						this.setValue(r, c + x, 3);
+					}
+				}
+				
+				//Up - Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c - 1) && this.getValue(r - 1, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c - x) == 0) {
+						this.setValue(r - x, c - x, 3);
+					}
+				}
+				
+				//Up - Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r - 1, c + 1) && this.getValue(r - 1, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r - x, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r - x, c + x) == 0) {
+						this.setValue(r - x, c + x, 3);
+					}
+				}
+				
+				//Down - Left
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c - 1) && this.getValue(r + 1, c - 1) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c - x) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c - x) == 0) {
+						this.setValue(r + x, c - x, 3);
+					}
+				}
+				
+				//Down - Right
+				if (this.getValue(r, c) == num1 && this.isValidPosition(r + 1, c + 1) && this.getValue(r + 1, c + 1) == num2) {
+					int x = 1;
+					while (this.getValue(r + x, c + x) == num2) {
+						x++;
+					}
+					if (this.getValue(r + x, c + x) == 0) {
+						this.setValue(r + x, c + x, 3);
+					}
+				}
+				
+			} //end second for loop
+		} //end first for loop
+	} //end possiblemoves2
+
+	//**************************************************************************************************//
+	/*                                         CAPTURE PIECE                                            */
+	//**************************************************************************************************//
+	public void CapturePiece2(int r, int c) {
+		int num1 = this.playerTurn().getNumberValue();
+		int num2;
+		
+		if(num1 == 1) {
+			num2 = 2;
+		}
+		else {
+			num2 = 1;
+		}
+		
+		boolean pMoves = false;
+		int column = c;
+		int row = r;
+		
+		if (this.getValue(r, c) == 3) {
+			//Up from 3
+			if (this.isValidPosition(r - 1, c) && this.getValue(r - 1, c) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c) == num2) {
+						this.setValue(r - x,  c, num1);
+						x++;
+					}
+				}
 			}
+			
+			//Down from 3
+			if (this.isValidPosition(r + 1, c) && this.getValue(r + 1, c) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c) == num2) {
+						this.setValue(r + x,  c, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Left from 3
+			if (this.isValidPosition(r, c - 1) && this.getValue(r, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r, c - x) == num2) {
+						this.setValue(r,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Right from 3
+			if (this.isValidPosition(r, c + 1) && this.getValue(r, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r, c + x) == num2) {
+						this.setValue(r,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Up-Left from 3
+			if (this.isValidPosition(r - 1, c - 1) && this.getValue(r - 1, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c - x) == num2) {
+						this.setValue(r - x,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Up-Right from 3
+			if (this.isValidPosition(r - 1, c + 1) && this.getValue(r - 1, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c + x) == num2) {
+						this.setValue(r - x,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Down-Left from 3
+			if (this.isValidPosition(r + 1, c - 1) && this.getValue(r + 1, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c - x) == num2) {
+						this.setValue(r + x,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Down-Right from 3
+			if (this.isValidPosition(r + 1, c + 1) && this.getValue(r + 1, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c + x) == num2) {
+						this.setValue(r + x,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//changes the value to whatever num1 is
+			if (this.getValue(r, c) == 3) {
+				this.setValue(r, c, num1);
+			}
+		} //Beginning if that starts capturing
+	}
+	
+	public void CapturePiece2(ZPlayer p, int r, int c) {
+		int num1 = p.getNumberValue();
+		int num2;
+		if(num1 == 1) {
+			num2 = 2;
 		}
-	}
-	
-	public static void addGame(Game aGame) throws IOException {
-		File outputFile = new File(gamesFile);
-		BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile, true));
-		bw.write(aGame.getPlayer1());  bw.newLine();
-		bw.write(aGame.getPlayer2());  bw.newLine();
-		bw.write(aGame.getP1Score());  bw.newLine();
-		bw.write(aGame.getP2Score());  bw.newLine();
-		bw.write(aGame.getVictor());  bw.newLine();
-		bw.close(); 
-	}
-	
-	public static ArrayList<Game> getGames() throws FileNotFoundException {
-		ArrayList<Game> games = new ArrayList<Game> ();
-		File file = new File(gamesFile); 
-	    Scanner sc = new Scanner(file);
-	    String player1, player2, victor;
-	    int score1, score2;
-	    while(sc.hasNext()) {
-	    	player1 = sc.next();
-	    	player2 = sc.next();
-	    	score1 = sc.nextInt();
-	    	score2 = sc.nextInt();
-	    	victor = sc.next();
-	    	Game aGame =  new Game(player1, player2, victor, score1, score2);
-	    	games.add(aGame);
-	    }
-	    
-		return games; 	
-	}
-	
-	public static void main (String[] args) {
-		Database.init();
-		ZPlayer p = new ZPlayer("foo", "bar");
-		ZPlayer p2 = new ZPlayer("test", "bar");
-		try {
-			Database.addPlayer(p);
-			Database.addPlayer(p2);
-			Database.addPlayer(p);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		else {
+			num2 = 1;
 		}
-		try {
-			System.out.println(Database.validatePlayer("test", "foo"));
-		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+		
+		boolean pMoves = false;
+		int column = c;
+		int row = r;
+		
+		if (this.getValue(r, c) == 3) {
+			//Up from 3
+			if (this.isValidPosition(r - 1, c) && this.getValue(r - 1, c) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c) == num2) {
+						this.setValue(r - x,  c, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Down from 3
+			if (this.isValidPosition(r + 1, c) && this.getValue(r + 1, c) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c) == num2) {
+						this.setValue(r + x,  c, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Left from 3
+			if (this.isValidPosition(r, c - 1) && this.getValue(r, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r, c - x) == num2) {
+						this.setValue(r,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Right from 3
+			if (this.isValidPosition(r, c + 1) && this.getValue(r, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r, c + x) == num2) {
+						this.setValue(r,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Up-Left from 3
+			if (this.isValidPosition(r - 1, c - 1) && this.getValue(r - 1, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c - x) == num2) {
+						this.setValue(r - x,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Up-Right from 3
+			if (this.isValidPosition(r - 1, c + 1) && this.getValue(r - 1, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r - x,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r - x,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r - x, c + x) == num2) {
+						this.setValue(r - x,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Down-Left from 3
+			if (this.isValidPosition(r + 1, c - 1) && this.getValue(r + 1, c - 1) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c - x) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c - x) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c - x) == num2) {
+						this.setValue(r + x,  c - x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//Down-Right from 3
+			if (this.isValidPosition(r + 1, c + 1) && this.getValue(r + 1, c + 1) == num2) {
+				int x = 1;
+				while (this.getValue(r + x,  c + x) == num2) {
+					x++;
+				}
+				if (this.getValue(r + x,  c + x) == num1) {
+					x = 1;
+					while (this.getValue(r + x, c + x) == num2) {
+						this.setValue(r + x,  c + x, num1);
+						x++;
+					}
+				}
+			}
+			
+			//changes the value to whatever num1 is
+			if (this.getValue(r, c) == 3) {
+				this.setValue(r, c, num1);
+			}
+			
+		} //Beginning if that starts capturing
 	
+		this.switchPlayerTurnIndicator();
+		}
 }
