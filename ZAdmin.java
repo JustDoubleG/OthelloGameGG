@@ -1,5 +1,3 @@
-package othello;
-
 public class ZAdmin extends ZPlayer{
 	private boolean isAdmin;
 	
