@@ -1,6 +1,7 @@
 /*
  * Database.Java
  * Sola Adekunle
+ * Database.java
  * November 28, 2018
  */
 
@@ -11,16 +12,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Database {
 	private static String playerfile = "players.txt";
 	private static String adminFile = "admins.txt";
+	private static String gamesFile = "games.txt";
 	
 	public static void init () {
 		File pFile = new File(playerfile);
 		File aFile = new File(adminFile);
+		File gFile = new File(gamesFile);
 		pFile.delete();
 		aFile.delete();
+		gFile.delete();
 	}
 	
 	public static void addPlayer(ZPlayer player) throws IOException { 
@@ -59,7 +65,7 @@ public class Database {
 		 return (username.equals(adminUsername) && password.equals(adminPassword));
 	}
 	
-	public static boolean playerExists (String username) throws IOException {
+	private static boolean playerExists (String username) throws IOException {
 		File file = new File(playerfile);
 		if (!file.exists()) 
 			return false;
@@ -76,6 +82,36 @@ public class Database {
 				return true;
 			}
 		}
+	}
+	
+	public static void addGame(Game aGame) throws IOException {
+		File outputFile = new File(gamesFile);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile, true));
+		bw.write(aGame.getPlayer1());  bw.newLine();
+		bw.write(aGame.getPlayer2());  bw.newLine();
+		bw.write(aGame.getP1Score());  bw.newLine();
+		bw.write(aGame.getP2Score());  bw.newLine();
+		bw.write(aGame.getVictor());  bw.newLine();
+		bw.close(); 
+	}
+	
+	public static ArrayList<Game> getGames() throws FileNotFoundException {
+		ArrayList<Game> games = new ArrayList<Game> ();
+		File file = new File(gamesFile); 
+	    Scanner sc = new Scanner(file);
+	    String player1, player2, victor;
+	    int score1, score2;
+	    while(sc.hasNext()) {
+	    	player1 = sc.next();
+	    	player2 = sc.next();
+	    	score1 = sc.nextInt();
+	    	score2 = sc.nextInt();
+	    	victor = sc.next();
+	    	Game aGame =  new Game(player1, player2, victor, score1, score2);
+	    	games.add(aGame);
+	    }
+	    
+		return games; 	
 	}
 	
 	public static void main (String[] args) {
